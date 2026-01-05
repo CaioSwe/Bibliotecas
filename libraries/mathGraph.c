@@ -71,3 +71,9 @@ void MathGraph_Draw(MathGraph mathGraph){
     DrawArrow((Vector2){m->frame.x, m->frame.y + m->frame.height}, (Vector2){m->frame.x + m->frame.width, m->frame.y + m->frame.height}, 5.0f, 5.0f, 0.0f, WHITE);
     DrawArrow((Vector2){m->frame.x, m->frame.y + m->frame.height}, (Vector2){m->frame.x, m->frame.y}, 5.0f, 5.0f, 0.0f, WHITE);
 }
+
+void MathGraph_Free(MathGraph mathGraph){
+    MathGraphStr* m = (MathGraphStr*)mathGraph;
+    free(m->points);
+    free(m);
+}

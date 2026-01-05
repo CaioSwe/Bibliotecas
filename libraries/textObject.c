@@ -8,13 +8,12 @@
 typedef struct TextObjectStr{
     int id;
     char text[MAX_STRSIZE];
-    Color color;
+    Vector2 position;
     int fontsize;
-    float x, y;
-    bool collision;
-    Rectangle rectangle;
 
+    Rectangle boundingBox;
     float padding;
+    Color color;
 } TextObjectStr;
 
 TextObject Text_Init(const char* text){
@@ -30,9 +29,8 @@ TextObject Text_Init(const char* text){
 
     txt->color = WHITE;
     txt->fontsize = 10;
-    txt->x = txt->y = 0;
-    txt->collision = false;
-    txt->rectangle = (Rectangle){txt->x, txt->y, MeasureText(txt->text, txt->fontsize), txt->fontsize};
+    txt->position.x = txt->position.y = 0;
+    txt->boundingBox = (Rectangle){txt->position.x, txt->position.y, MeasureText(txt->text, txt->fontsize), txt->fontsize};
     txt->padding = 0.0f;
 
     return (TextObject)txt;
@@ -42,12 +40,10 @@ TextObject Text_Copy(TextObject txtObj){
     TextObjectStr* txt = (TextObjectStr*)txtObj;
     TextObjectStr* newTxt = (TextObjectStr*)Text_Init(txt->text);
 
-    newTxt->collision = txt->collision;
     newTxt->fontsize = txt->fontsize;
     newTxt->color = txt->color;
-    newTxt->rectangle = txt->rectangle;
-    newTxt->x = txt->x;
-    newTxt->y = txt->y;
+    newTxt->boundingBox = txt->boundingBox;
+    newTxt->position = txt->position;
     newTxt->padding = txt->padding;
 
     return (TextObject)newTxt;
@@ -55,7 +51,7 @@ TextObject Text_Copy(TextObject txtObj){
 
 static void Text_UpdateRec(TextObject txtObj){
     TextObjectStr* txt = (TextObjectStr*)txtObj;
-    txt->rectangle = (Rectangle){txt->x - txt->padding, txt->y - txt->padding, MeasureText(txt->text, txt->fontsize) + txt->padding * 2, txt->fontsize + txt->padding * 2};
+    txt->boundingBox = (Rectangle){txt->position.x - txt->padding, txt->position.y - txt->padding, MeasureText(txt->text, txt->fontsize) + txt->padding * 2, txt->fontsize + txt->padding * 2};
 }
 
 void Text_Set(TextObject txtObj, const char* text){
@@ -87,30 +83,35 @@ void Text_Scale(TextObject txtObj, float scaling){
 
 void Text_SetPosition(TextObject txtObj, Vector2 position){
     TextObjectStr* txt = (TextObjectStr*)txtObj;
-    txt->rectangle.x = position.x;
-    txt->rectangle.y = position.y;
-    
-    txt->x = txt->rectangle.x + txt->padding;
-    txt->y = txt->rectangle.y + txt->padding;
+    txt->boundingBox.x = position.x;
+    txt->boundingBox.y = position.y;
+
+    txt->position.x = txt->boundingBox.x + txt->padding;
+    txt->position.y = txt->boundingBox.y + txt->padding;
+}
+
+void Text_SetColor(TextObject txtObj, Color color){
+    TextObjectStr* txt = (TextObjectStr*)txtObj;
+    txt->color = color;
 }
 
 bool Text_IsPointOverText(TextObject txtObj, Vector2 point){
     TextObjectStr* txt = (TextObjectStr*)txtObj;
-    return CheckCollisionPointRec(point, txt->rectangle);
+    return CheckCollisionPointRec(point, txt->boundingBox);
 }
 
 void Text_MoveDelta(TextObject txtObj, Vector2 delta){
     TextObjectStr* txt = (TextObjectStr*)txtObj;
-    txt->rectangle.x += delta.x;
-    txt->rectangle.y += delta.y;
+    txt->boundingBox.x += delta.x;
+    txt->boundingBox.y += delta.y;
     
-    txt->x = txt->rectangle.x + txt->padding;
-    txt->y = txt->rectangle.y + txt->padding;
+    txt->position.x = txt->boundingBox.x + txt->padding;
+    txt->position.y = txt->boundingBox.y + txt->padding;
 }
 
 void Text_Draw(TextObject txtObj){
     TextObjectStr* txt = (TextObjectStr*)txtObj;
-    DrawText(txt->text, txt->x, txt->y, txt->fontsize, txt->color);
+    DrawText(txt->text, txt->position.x, txt->position.y, txt->fontsize, txt->color);
 }
 
 int Text_getId(TextObject txtObj){
@@ -120,10 +121,31 @@ int Text_getId(TextObject txtObj){
 
 Rectangle Text_getRectangle(TextObject txtObj){
     TextObjectStr* txt = (TextObjectStr*)txtObj;
-    return txt->rectangle;
+    return txt->boundingBox;
+}
+
+int Text_getTextLength(TextObject txtObj){
+    TextObjectStr* txt = (TextObjectStr*)txtObj;
+    return (int)strlen(txt->text);
+}
+
+float Text_getLength(TextObject txtObj){
+    TextObjectStr* txt = (TextObjectStr*)txtObj;
+    return (float)MeasureText(txt->text, txt->fontsize);
+}
+
+const char* Text_getText(TextObject txtObj){
+    TextObjectStr* txt = (TextObjectStr*)txtObj;
+    return TextFormat("%s", txt->text);
 }
 
 float Text_getPadding(TextObject txtObj){
     TextObjectStr* txt = (TextObjectStr*)txtObj;
     return txt->padding;
+}
+
+void Text_Free(TextObject txtObj){
+    TextObjectStr* txt = (TextObjectStr*)txtObj;
+    free(txt->text);
+    free(txt);
 }

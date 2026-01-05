@@ -31,10 +31,10 @@ Arvore criaArvore(Item item);
 void inserirArvore(Arvore arvore, compararItens compFunc, Item item);
 
 /**
- * @brief Percorre simetricamente a a'rvore executando uma funcao externa para cada item.
+ * @brief Faz o percurso sime'trico da a'rvore, executando a funcao externa para cada item.
  * @param arvore Ponteiro para a estrutura da a'rvore.
  * @param runFunc Funcao a ser executada em cada item visitado.
- * @param extra Ponteiro para dados adicionais necessarios a' funcao runFunc.
+ * @param extra Ponteiro para dados adicionais para a funcao runFunc.
  * @return Não ha' retorno de algum valor.
  */
 void percorrerArvore(Arvore arvore, runThroughItems runFunc, void* extra);
@@ -51,7 +51,7 @@ void percorrerArvore(Arvore arvore, runThroughItems runFunc, void* extra);
 Item removerItemArvore(Arvore arvore, Item item, compararItens directionFunc, compararItens compFunc, void* extra);
 
 /**
- * @brief Desaloca toda a memoria da a'rvore e de seus itens.
+ * @brief Libera toda a memoria da a'rvore e de seus itens.
  * @param arvore Ponteiro para a estrutura da a'rvore a ser destruida.
  * @param fFunc Funcao responsavel por liberar a memoria de cada item.
  * @param extra Ponteiro para dados adicionais necessarios a' funcao fFunc.

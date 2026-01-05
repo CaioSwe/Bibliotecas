@@ -284,44 +284,24 @@ void Animation_SetScaleFunction(Animation animation, interpolationFunction inter
     animScale->interFunc = interFunc;
 }
 
-// PositionAnimation* AnimationPosition_Copy(PositionAnimation* posFrom){
-//     PositionAnimation* 
+static void animFreeScale(ScaleAnimation* scale){
+    free(scale);
+}
 
-//     posTo->elapsed = posFrom->elapsed;
-//     posTo->animating = posFrom->animating;
-//     posTo->duration = posFrom->duration;
+static void animFreeFrames(FramesAnimation* frames){
+    free(frames);
+}
 
-//     posTo->function = posFrom->function;
+static void animFreePos(PositionAnimation* pos){
+    free(pos);
+}
 
-//     posTo->current = posFrom->current;
-//     posTo->start = posFrom->start;
-//     posTo->end = posFrom->end;
-// }
+void Animation_Free(Animation animation){
+    AnimationStr* anim = (AnimationStr*)animation;
 
-// void Animation_ScaleCopy(ScaleAnimation* scaleFrom, ScaleAnimation* scaleTo){
-//     scaleTo->elapsed = scaleFrom->elapsed;
-//     scaleTo->animating = scaleFrom->animating;
-//     scaleTo->duration = scaleFrom->duration;
+    if(anim->scale != NULL) animFreeScale(anim->scale);
+    if(anim->frames != NULL) animFreeFrames(anim->frames);
+    if(anim->position != NULL) animFreePos(anim->position);
 
-//     scaleTo->maximized = scaleFrom->maximized;
-//     scaleTo->minimized = scaleFrom->minimized;
-
-//     scaleTo->current = scaleFrom->current;
-//     scaleTo->start = scaleFrom->start;
-//     scaleTo->end = scaleFrom->end;
-// }
-
-// void Animation_FramesCopy(FramesAnimation* framesFrom, FramesAnimation* framesTo){
-//     framesTo->animating = framesFrom->animating;
-
-//     framesTo->framesPadding = framesFrom->framesPadding;
-//     framesTo->padding = framesFrom->padding;
-
-//     framesTo->animationDirection = framesFrom->animationDirection;
-//     framesTo->currentFrame = framesFrom->currentFrame;
-//     framesTo->amountOfFrames = framesFrom->amountOfFrames;
-//     framesTo->framesCounter = framesFrom->framesCounter;
-
-//     framesTo->framesSpeed = framesFrom->framesSpeed;
-//     framesTo->baseSpeed = framesFrom->baseSpeed;
-// }
+    free(anim);
+}

@@ -49,9 +49,15 @@ void MathGraph_Draw(MathGraph mathGraph);
 
 /**
  * @brief Libera a memoria alocada pelo objeto de mathGraph criado.
- * @param txtObj O objeto de grafico 'a ser liberado.
+ * @param mathGraph O objeto de grafico 'a ser liberado.
  * @return Nao ha' retorno de algum valor.
  */
 void MathGraph_Free(MathGraph mathGraph);
+
+/**
+ * @brief Libera toda a memoria alocada para os objetos de graficos criados.
+ * @return Nao ha' retorno de algum valor.
+ */
+void MathGraph_FreeAll();
 
 #endif

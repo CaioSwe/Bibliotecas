@@ -4,7 +4,13 @@
 #include <math.h>
 #include <string.h>
 
+#include <hash.h>
+#include "utils.h"
+
+Hash ImgAllInstances = NULL;
+
 typedef struct ImageObjectStr {
+    int id;
     char* filename;
     Texture2D image;
     
@@ -44,12 +50,19 @@ static void Image_ReplaceTexture(ImageObjectStr* imgobj, const char* filename, b
 ImageObject Image_Init(const char* filename){
     ImageObjectStr* imgobj = (ImageObjectStr*)malloc(sizeof(ImageObjectStr));
 
+    static int id = 0;
+
+    imgobj->id = id;
+    id += 1;
+
     imgobj->filename = NULL;
     Image_ReplaceTexture(imgobj, filename, true, true);
 
     imgobj->color = WHITE;
     imgobj->rotation = 0;
     imgobj->origin = (Vector2){0, 0};
+
+    createAndInsertInstance(&ImgAllInstances, imgobj->id, imgobj);
 
     return (ImageObject)imgobj;
 }
@@ -169,10 +182,28 @@ void Image_Draw(ImageObject img){
     DrawTexturePro(imgobj->image, imgobj->source, imgobj->destination, imgobj->origin, imgobj->rotation, imgobj->color);
 }
 
-void Image_Free(ImageObject img){
+void Image_DrawManually(ImageObject img, Rectangle source, Rectangle destination){
     ImageObjectStr* imgobj = (ImageObjectStr*)img;
 
-    free(imgobj->filename);
+    DrawTexturePro(imgobj->image, source, destination, imgobj->origin, imgobj->rotation, imgobj->color);
+}
+
+void Image_FreeInstance(ImageObject img){
+    ImageObjectStr* imgobj = (ImageObjectStr*)img;
+
+    if(imgobj->filename) free(imgobj->filename);
     UnloadTexture(imgobj->image);
     free(imgobj);
+}
+
+void Image_Free(ImageObject img){
+    ImageObjectStr* imgobj = (ImageObjectStr*)img;
+    removeInstance(ImgAllInstances, imgobj->id);
+
+    Image_FreeInstance(img);
+}
+
+void Image_FreeAll(){
+    destroiHash(ImgAllInstances, freeExtra, Image_FreeInstance);
+    ImgAllInstances = NULL;
 }

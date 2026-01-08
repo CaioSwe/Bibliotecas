@@ -94,6 +94,17 @@ Vector2 getRectCenter(Rectangle rectangle){
     return center;
 }
 
+Rectangle reduceRecSizeEvenly(Rectangle rectangle, float factor){
+    Rectangle rec = rectangle;
+
+    rec.x = rectangle.x + (rectangle.width * factor / 2);
+    rec.y = rectangle.y + (rectangle.height * factor / 2);
+    rec.width *= factor;
+    rec.height *= factor;
+    
+    return rec;
+}
+
 float linearFunction(float t){
     return t;
 }
@@ -147,4 +158,13 @@ float easeOutBounce(float t) {
         t -= 2.625f / d1;
         return n1 * t * t + 0.984375f;
     }
+}
+
+void createAndInsertInstance(Hash* hash, int id, Item item){
+    if(*hash == NULL) *hash = criaHash(23, false, 0.75f);
+    inserirHash(*hash, TextFormat("%d", id), item);
+}
+
+Item removeInstance(Hash hash, int id){
+    return removeHashValue(hash, TextFormat("%d", id));
 }

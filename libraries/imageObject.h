@@ -158,10 +158,25 @@ ImageObject Image_Copy(ImageObject img);
 void Image_Draw(ImageObject img);
 
 /**
+ * @brief Renderiza a imagem na tela com os retangulos passados.
+ * @param img O objeto de imagem a ser desenhado.
+ * @param source Fonte da imagem principal (crop).
+ * @param destination Local de desenho no plano desejado.
+ * @return Nao ha' retorno de algum valor.
+ */
+void Image_DrawManually(ImageObject img, Rectangle source, Rectangle destination);
+
+/**
  * @brief Libera a memoria alocada para o objeto de imagem.
  * @param img O objeto de imagem a ser liberado.
  * @return Nao ha' retorno de algum valor.
  */
 void Image_Free(ImageObject img);
+
+/**
+ * @brief Libera todas as instancias de memoria alocadas para os objetos de imagens criados.
+ * @return Nao ha' retorno de algum valor.
+ */
+void Image_FreeAll();
 
 #endif

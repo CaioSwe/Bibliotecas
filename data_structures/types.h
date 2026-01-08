@@ -56,11 +56,31 @@ typedef Item (*copyFunction)(Item item);
 typedef void (*runThroughItems)(Item item, void* extra);
 
 /**
+ * @brief Funcao que recebe um item e retorna um valor booleano indicando a condicao de
+ * aceitacao da funcao (Usado por condicoes dentro de outras funcoes encapsuladas).
+ * @return Retorna um valor booleano indicando a aceitacao ou rejeicao do item passado.
+ */
+typedef bool (*conditionFunction)(Item item);
+
+/**
+ * @brief Funcao de loop usado para simplificacao do co'digo.
+ * @return Nao ha' retorno de algum valor.
+ */
+typedef void (*loopFunction)(int iteration, void* extra);
+
+/**
  * @brief Funcao de liberacao de memo'ria convencional (free), com parametro adicional 'extra'
  * para passagem de parametro no caso do freeFunc.
  * @return Nao ha' retorno de algum valor.
  */
 void freeReg(Item item, void* extra);
+
+/**
+ * @brief Funcao de liberacao de memo'ria com o valor de 'extra' sendo um ponteiro para a funcao de 
+ * liberacao real de parametro u'nico.
+ * @return Nao ha' retorno de algum valor.
+ */
+void freeExtra(Item item, void* extra);
 
 /**
  * @brief Checa se a alocacao foi feita corretamente.
@@ -69,5 +89,16 @@ void freeReg(Item item, void* extra);
  * @return Retorna um valor booleano: True, caso houve um erro. False, caso contra'rio.
  */
 bool checkAllocation(void* var, const char* text);
+
+/**
+ * @brief Funcao de loop usado para simplificacao do co'digo.
+ * @param repeats Quantidade de iteracoes a ser feita.
+ * @param lFunc Ponteiro para um funcao a ser chamada entre iteracoes.
+ * @param extra Ponteiro para um dado qualquer a ser passado 'a funcao de interacao passada.
+ * @return Nao ha' retorno de algum valor.
+ */
+void loop(int repeats, loopFunction lFunc, void* extra);
+
+int** mallocMatrix(int* matrix, int rows, int columns);
 
 #endif

@@ -5,6 +5,9 @@
 #include <stddef.h>
 #include <stdbool.h>
 
+#include <types.h>
+#include <hash.h>
+
 // Minimal WinAPI cursor declarations (Windows only)
 typedef void* HCURSOR;
 typedef void* HINSTANCE;
@@ -63,6 +66,14 @@ void DrawArrow(Vector2 start, Vector2 end, float headLength, float headWidth, fl
 Vector2 getRectCenter(Rectangle rectangle);
 
 /**
+ * @brief Reduz o tamanho do retangulo igualmente em todos os lados (reducao centralizada).
+ * @param rectangle O retangulo a ser reduzido.
+ * @param factor O fator de reducao (0 <= factor <= 1)
+ * @return Retorna um retangulo reduzido.
+ */
+Rectangle reduceRecSizeEvenly(Rectangle rectangle, float factor);
+
+/**
  * @brief Definição de tipo para funções de interpolação.
  * * @param t O tempo normalizado (valor entre 0 e 1).
  * @return Retorna o valor da função no instante t (valor entre 0 e 1).
@@ -94,5 +105,14 @@ float easeInOutCirc(float t);
 float easeOutBounce(float t);
 
 ///////////////////////////////////////////
+
+/**
+ * Gerenciamento de memoria pela tabela Hash para as instancias de
+ * todas as bibliotecas simplificadas do Raylib (libraries).
+ */
+
+void createAndInsertInstance(Hash* hash, int id, Item item);
+
+Item removeInstance(Hash hash, int id);
 
 #endif

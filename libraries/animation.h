@@ -21,11 +21,10 @@ Animation Animation_Init();
 /**
  * @brief Adiciona um componente de animacao de posicao ao objeto.
  * @param animation O objeto de animacao 'a ser modificado.
- * @param position A posicao inicial de referencia.
  * @param interFunc Funcao de interpolacao para o movimento.
  * @return Nao ha' retorno de algum valor.
  */
-void Animation_AddPositionAnimation(Animation animation, Vector2 position, interpolationFunction interFunc);
+void Animation_AddPositionAnimation(Animation animation, interpolationFunction interFunc);
 
 /**
  * @brief Adiciona um componente de animacao de escala ao objeto.
@@ -41,9 +40,10 @@ void Animation_AddScaleAnimation(Animation animation, Rectangle rectangle, inter
  * @param animation O objeto de animacao a ser modificado.
  * @param amountOfFrames Quantidade total de quadros da animacao.
  * @param framesSpeed Velocidade da troca de quadros (frames por segundo).
+ * @param frameDelta A distancia de um frame ao outro em pixels.
  * @return Nao ha' retorno de algum valor.
  */
-void Animation_AddFramesAnimation(Animation animation, int amountOfFrames, int framesSpeed);
+void Animation_AddFramesAnimation(Animation animation, int amountOfFrames, float framesSpeed, float frameDelta);
 
 /**
  * @brief Define um objetivo de movimento para a animacao de posicao.
@@ -62,6 +62,8 @@ void Animation_MoveTo(Animation animation, Vector2 finalPoint, float duration);
  */
 void Animation_UpdatePosition(Animation animation, float deltaTime);
 
+bool Animation_PositionIsAnimating(Animation animation);
+
 /**
  * @brief Define um objetivo de redimensionamento para a animacao de escala.
  * @param animation O objeto de animacao escolhido.
@@ -78,6 +80,18 @@ void Animation_Resize(Animation animation, float scaleTo, float duration);
  * @return Nao ha' retorno de algum valor.
  */
 void Animation_UpdateScale(Animation animation, float deltaTime);
+
+void Animation_UpdateFrames(Animation animation, float deltaTime);
+
+void Animation_ReverseFrames(Animation animation);
+
+bool Animation_FramesIsAnimating(Animation animation);
+
+void Animation_ResetFrames(Animation animation);
+
+void Animation_SetFrames(Animation animation, int amountOfFrames, float frameDelta, float framesSpeed);
+
+float Animation_GetFrameCoord(Animation animation);
 
 /**
  * @brief Atualiza todos os componentes de animacao inicializados.
@@ -139,5 +153,11 @@ void Animation_SetScaleFunction(Animation animation, interpolationFunction inter
  * @return Nao ha' retorno de algum valor.
  */
 void Animation_Free(Animation animation);
+
+/**
+ * @brief Libera toda a memoria alocada para os objetos de animacoes criados.
+ * @return Nao ha' retorno de algum valor.
+ */
+void Animation_FreeAll();
 
 #endif

@@ -2,6 +2,9 @@
 
 #include <lista.h>
 
+#include <hash.h>
+Hash mathAllInstances = NULL;
+
 typedef struct MathGraphStr{
     int id;
     interpolationFunction interFunc;
@@ -33,6 +36,7 @@ MathGraph MathGraph_Init(interpolationFunction interFunc, int numPoints, Rectang
 
     static int id = 0;
     m->id = id;
+    id += 1;
 
     m->interFunc = interFunc;
     m->frame = frame;
@@ -42,7 +46,7 @@ MathGraph MathGraph_Init(interpolationFunction interFunc, int numPoints, Rectang
 
     calculatePoints(m);
 
-    id += 1;
+    createAndInsertInstance(&mathAllInstances, m->id, m);
 
     return (MathGraph)m;
 }
@@ -72,8 +76,20 @@ void MathGraph_Draw(MathGraph mathGraph){
     DrawArrow((Vector2){m->frame.x, m->frame.y + m->frame.height}, (Vector2){m->frame.x, m->frame.y}, 5.0f, 5.0f, 0.0f, WHITE);
 }
 
-void MathGraph_Free(MathGraph mathGraph){
+void MathGraph_FreeInstance(MathGraph mathGraph){
     MathGraphStr* m = (MathGraphStr*)mathGraph;
     free(m->points);
     free(m);
+}
+
+void MathGraph_Free(MathGraph mathGraph){
+    MathGraphStr* m = (MathGraphStr*)mathGraph;
+    removeInstance(mathAllInstances, m->id);
+
+    MathGraph_FreeInstance(mathGraph);
+}
+
+void MathGraph_FreeAll(){
+    destroiHash(mathAllInstances, freeExtra, MathGraph_FreeInstance);
+    mathAllInstances = NULL;
 }

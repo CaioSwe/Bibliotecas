@@ -29,13 +29,21 @@ MyCamera cameraInit(Vector2 position, Vector2 offset, float zoomBaseFactor);
 Vector2 getPointOnCamera(MyCamera camera, Vector2 point);
 
 /**
- * @brief Move a camera.
+ * @brief Move a camera com um delta.
  * @param camera O objeto de camera a ser movido.
  * @param delta O vetor (x, y) de deslocamento.
  * @param zoomProportional Se verdadeiro, o movimento sera escalonado pelo zoom atual.
  * @return Nao ha' retorno de algum valor.
  */
 void cameraMove(MyCamera camera, Vector2 delta, bool zoomProportional);
+
+/**
+ * @brief Move a camera para um posicao.
+ * @param camera O objeto de camera a ser movido.
+ * @param delta O vetor (x, y) de posicao.
+ * @return Nao ha' retorno de algum valor.
+ */
+void cameraSetPosition(MyCamera camera, Vector2 position);
 
 /**
  * @brief Calcula o deslocamento de um ponto corrigido pelo zoom da camera.
@@ -52,6 +60,10 @@ Vector2 getCameraPointDelta(MyCamera camera, Vector2 delta);
  * @return Nao ha' retorno de algum valor.
  */
 void cameraZoom(MyCamera camera, float factor);
+
+Rectangle cameraGetRec(MyCamera camera);
+
+Vector2 cameraGetOffset(MyCamera camera);
 
 /**
  * @brief Inicia o modo de renderizacao 2D da camera.
@@ -75,5 +87,11 @@ void closeCamera(MyCamera camera);
  * @return Nao ha' retorno de algum valor.
  */
 void cameraFree(MyCamera camera);
+
+/**
+ * @brief Libera toda a memoria alocada para os objetos de camera criados.
+ * @return Nao ha' retorno de algum valor.
+ */
+void cameraFreeAll();
 
 #endif

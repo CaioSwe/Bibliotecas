@@ -6,7 +6,13 @@
 #include <types.h>
 #include <stdio.h>
 
+#include <hash.h>
+#include "utils.h"
+
+Hash cameraAllInstances = NULL;
+
 typedef struct CameraStr{
+    int id;
     Camera2D camera;
 
     float zoomBaseFactor;
@@ -16,6 +22,10 @@ typedef struct CameraStr{
 MyCamera cameraInit(Vector2 position, Vector2 offset, float zoomBaseFactor){
     CameraStr* c = (CameraStr*)malloc(sizeof(CameraStr));
     
+    static int id = 0;
+    c->id = id;
+    id += 1;
+
     Camera2D camera = {0};
 
     camera.target = position;
@@ -25,6 +35,8 @@ MyCamera cameraInit(Vector2 position, Vector2 offset, float zoomBaseFactor){
     c->camera = camera;
     c->zoomBaseFactor = zoomBaseFactor;
     c->scrolls = 0;
+
+    createAndInsertInstance(&cameraAllInstances, c->id, c);
 
     return (MyCamera)c;
 }
@@ -45,6 +57,11 @@ void cameraMove(MyCamera camera, Vector2 delta, bool zoomProportional){
     // printf("\n [%.1f, %.1f] -> [%.1f, %.1f]", rDelta.x, rDelta.y, c->camera.target.x, c->camera.target.y);
 }
 
+void cameraSetPosition(MyCamera camera, Vector2 position){
+    CameraStr* c = (CameraStr*)camera;
+    c->camera.target = position;
+}
+
 Vector2 getCameraPointDelta(MyCamera camera, Vector2 delta){
     CameraStr* c = (CameraStr*)camera;
 
@@ -58,6 +75,27 @@ void cameraZoom(MyCamera camera, float factor){
     c->camera.zoom = powf(c->zoomBaseFactor, c->scrolls);
 }
 
+Rectangle cameraGetRec(MyCamera camera){
+    CameraStr* c = (CameraStr*)camera;
+
+    Rectangle screenSize = (Rectangle){0, 0, GetScreenWidth(), GetScreenHeight()};
+
+    float value = 1/c->camera.zoom;
+
+    screenSize.x = c->camera.target.x - (c->camera.offset.x * value);
+    screenSize.y = c->camera.target.y - (c->camera.offset.y * value);
+    screenSize.width *= value;
+    screenSize.height *= value;
+
+    return screenSize;
+}
+
+Vector2 cameraGetOffset(MyCamera camera){
+    CameraStr* c = (CameraStr*)camera;
+
+    return c->camera.offset;
+}
+
 void openCamera(MyCamera camera){
     CameraStr* c = (CameraStr*)camera;
 
@@ -69,7 +107,18 @@ void closeCamera(MyCamera camera){
     EndMode2D();
 }
 
-void cameraFree(MyCamera camera){
+static void cameraFreeInstance(MyCamera camera){
     CameraStr* c = (CameraStr*)camera;
     free(c);
+}
+
+void cameraFree(MyCamera camera){
+    CameraStr* c = (CameraStr*)camera;
+    removeInstance(cameraAllInstances, c->id);
+
+    cameraFreeInstance(camera);
+}
+
+void cameraFreeAll(){
+    destroiHash(cameraAllInstances, freeExtra, cameraFreeInstance);
 }

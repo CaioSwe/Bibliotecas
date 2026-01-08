@@ -5,6 +5,11 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <hash.h>
+#include "utils.h"
+
+Hash TxtAllInstances = NULL;
+
 typedef struct TextObjectStr{
     int id;
     char text[MAX_STRSIZE];
@@ -32,6 +37,8 @@ TextObject Text_Init(const char* text){
     txt->position.x = txt->position.y = 0;
     txt->boundingBox = (Rectangle){txt->position.x, txt->position.y, MeasureText(txt->text, txt->fontsize), txt->fontsize};
     txt->padding = 0.0f;
+
+    createAndInsertInstance(&TxtAllInstances, txt->id, txt);
 
     return (TextObject)txt;
 }
@@ -144,8 +151,19 @@ float Text_getPadding(TextObject txtObj){
     return txt->padding;
 }
 
+static void Text_FreeInstance(TextObject txtObj){
+    TextObjectStr* txt = (TextObjectStr*)txtObj;
+    free(txt);
+}
+
 void Text_Free(TextObject txtObj){
     TextObjectStr* txt = (TextObjectStr*)txtObj;
-    free(txt->text);
-    free(txt);
+    removeInstance(TxtAllInstances, txt->id);
+
+    Text_FreeInstance(txtObj);
+}
+
+void Text_FreeAll(){
+    destroiHash(TxtAllInstances, freeExtra, Text_FreeInstance);
+    TxtAllInstances = NULL;
 }

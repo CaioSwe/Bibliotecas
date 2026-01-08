@@ -22,8 +22,10 @@ typedef struct HashStr{
 static bool isPrimo(int v){
     if(v < 2) return false;
 
+    if(v % 2 == 0) return false;
+
     int raizV = sqrt(v);
-    for(int i = 2; i <= raizV; i++){
+    for(int i = 3; i <= raizV; i += 2){
         if(v % i == 0) return false;
     }
     return true;

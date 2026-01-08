@@ -28,6 +28,8 @@ Hash criaHash(int tam, bool gerarPrimo, double fPreenchimento);
 
 /**
  * @brief Insere uma nova informacao na tabela Hash especificada.
+ * 
+ * AVISO: Caso a tabela ultrapasse o fator de preenchimento estabelecido, e' alocada uma nova tabela com o pro'ximo primo do dobro do espaco anterior.
  * @param hash Tabela hash a ser inserida um valor novo.
  * @param nome String a ser associada ao valor.
  * @param valor Ponteiro para um valor a ser associado ao nome especificado.

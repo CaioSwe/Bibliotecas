@@ -149,4 +149,10 @@ float Text_getPadding(TextObject txtObj);
  */
 void Text_Free(TextObject txtObj);
 
+/**
+ * @brief Libera todas as instancias de memoria alocadas pelos objetos de texto criados.
+ * @return Nao ha' retorno de algum valor.
+ */
+void Text_FreeAll();
+
 #endif

@@ -152,7 +152,7 @@ void SpriteSheet_SetFrame(SpriteSheet spriteSheet, const char* name){
     if(s->lastName != NULL && strcmp(name, s->lastName) == 0) return;
 
     if(s->lastName != NULL) free(s->lastName);
-    s->lastName = (char*)malloc(sizeof(strlen(name)) + 1);
+    s->lastName = (char*)malloc(strlen(name) + 1);
     strcpy(s->lastName, name);
 
     Item item = getHashValue(s->indexes, name);

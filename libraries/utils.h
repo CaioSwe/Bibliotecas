@@ -73,6 +73,16 @@ Vector2 getRectCenter(Rectangle rectangle);
  */
 Rectangle reduceRecSizeEvenly(Rectangle rectangle, float factor);
 
+Rectangle increaseRecSizeEvenly(Rectangle rectangle, float factor);
+
+/**
+ * @brief Pega o angulo entre dois pontos no plano.
+ * @param v1 Ponto 1 (origem do angulo).
+ * @param v2 Ponto 2 (destino do angulo).
+ * @return Retorna o angulo dos dois pontos.
+ */
+float getVector2Angle(Vector2 v1, Vector2 v2);
+
 /**
  * @brief Definição de tipo para funções de interpolação.
  * * @param t O tempo normalizado (valor entre 0 e 1).
@@ -103,6 +113,10 @@ float easeInOutQuint(float t);
 float easeInOutCirc(float t);
 
 float easeOutBounce(float t);
+
+float easeOutBack(float t);
+
+float bellFunction(float t);
 
 ///////////////////////////////////////////
 

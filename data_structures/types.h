@@ -83,6 +83,13 @@ void freeReg(Item item, void* extra);
 void freeExtra(Item item, void* extra);
 
 /**
+ * @brief Funcao de percurso com o valor de 'extra' sendo um ponteiro para a funcao de 
+ * percurso real de parametro u'nico.
+ * @return Nao ha' retorno de algum valor.
+ */
+void runExtra(Item item, void* extra);
+
+/**
  * @brief Checa se a alocacao foi feita corretamente.
  * @param var Varia'vel 'a ser inspecionada.
  * @param text Mensagem de erro caso ocorreu falha na alocacao.

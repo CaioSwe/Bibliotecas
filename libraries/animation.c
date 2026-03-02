@@ -198,7 +198,7 @@ void Animation_Resize(Animation animation, float scaleTo, float duration){
     // if(animScale->resources.animating) return;
 
     animScale->start = 1.0f;
-    animScale->end = 1.0f * scaleTo;
+    animScale->end = scaleTo;
     animScale->current = 1.0f;
 
     animScale->resources.duration = duration;
@@ -221,7 +221,6 @@ void Animation_UpdateScale(Animation animation, float deltaTime){
     float progress = animScale->resources.elapsed / animScale->resources.duration;
 
     if(progress >= 1.0f){
-        progress = 1.0f;
         animScale->resources.animating = false;
     }
 
@@ -229,6 +228,45 @@ void Animation_UpdateScale(Animation animation, float deltaTime){
 
     float prevScale = animScale->current;
     float newScale = lerp(animScale->start, animScale->end, eased);
+    
+    animScale->current = newScale;
+
+    Vector2 center = getRectCenter(recItem);
+
+    float baseWidth = recItem.width / prevScale;
+    float baseHeight = recItem.height / prevScale;
+
+    recItem.width = baseWidth * newScale;
+    recItem.height = baseHeight * newScale;
+
+    recItem.x = center.x - recItem.width / 2.0f;
+    recItem.y = center.y - recItem.height / 2.0f;
+
+    animScale->rectangle = recItem;
+}
+
+bool Animation_ScaleIsAnimating(Animation animation){
+    AnimationStr* a = (AnimationStr*)animation;
+
+    if(a->scale == NULL) return false;
+
+    return a->scale->resources.animating;
+}
+
+void Animation_EndResize(Animation animation){
+    AnimationStr* a = (AnimationStr*)animation;
+
+    if(a->scale == NULL || a->scale->resources.animating == false) return;
+
+    ScaleAnimation* animScale = a->scale;
+
+    Rectangle recItem = animScale->rectangle;
+
+    animScale->resources.animating = false;
+    animScale->resources.elapsed = 0.0f;
+
+    float prevScale = animScale->current;
+    float newScale = animScale->end;
     
     animScale->current = newScale;
 

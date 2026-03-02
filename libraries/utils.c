@@ -105,6 +105,26 @@ Rectangle reduceRecSizeEvenly(Rectangle rectangle, float factor){
     return rec;
 }
 
+Rectangle increaseRecSizeEvenly(Rectangle rectangle, float factor){
+    Rectangle rec = rectangle;
+
+    rec.x = (rectangle.x + rectangle.width / 2) - (rectangle.width * factor / 2);
+    rec.y = (rectangle.y + rectangle.height / 2) - (rectangle.height * factor / 2);
+    rec.width *= factor;
+    rec.height *= factor;
+    
+    return rec;
+}
+
+float getVector2Angle(Vector2 v1, Vector2 v2){
+    float ydif = v2.y - v1.y;
+    float xdif = v2.x - v1.x;
+
+    float angle = atan2f(ydif, xdif);
+    
+    return angle;
+}
+
 float linearFunction(float t){
     return t;
 }
@@ -158,6 +178,17 @@ float easeOutBounce(float t) {
         t -= 2.625f / d1;
         return n1 * t * t + 0.984375f;
     }
+}
+
+float easeOutBack(float t){
+    const float c1 = 1.70158;
+    const float c3 = c1 + 1;
+
+    return 1 + c3 * powf(t - 1, 3) + c1 * powf(t - 1, 2);
+}
+
+float bellFunction(float t){
+    return exp(-1 * (powf(t - 0.5f, 2) / 0.03f));
 }
 
 void createAndInsertInstance(Hash* hash, int id, Item item){

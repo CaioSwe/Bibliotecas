@@ -63,7 +63,11 @@ void cameraZoom(MyCamera camera, float factor);
 
 Rectangle cameraGetRec(MyCamera camera);
 
+void cameraSetRec(MyCamera camera, Rectangle rec);
+
 Vector2 cameraGetOffset(MyCamera camera);
+
+float cameraGetZoom(MyCamera camera);
 
 /**
  * @brief Inicia o modo de renderizacao 2D da camera.

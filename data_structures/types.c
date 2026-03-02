@@ -13,6 +13,11 @@ void freeExtra(Item item, void* extra){
     fFunc(item);
 }
 
+void runExtra(Item item, void* extra){
+    void (*runFunc)(Item) = (void (*)(Item))extra;
+    runFunc(item);
+}
+
 bool checkAllocation(void* var, const char* text){
     // Caso a varia'vel passada for nula, lanca uma mensagem de erro.
     if(var == NULL){

@@ -1,11 +1,12 @@
 #include "camera.h"
 
-#include <raymath.h>
+#include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
+
+#include <raymath.h>
 
 #include <types.h>
-#include <stdio.h>
-
 #include <hash.h>
 #include "utils.h"
 
@@ -90,10 +91,27 @@ Rectangle cameraGetRec(MyCamera camera){
     return screenSize;
 }
 
+void cameraSetRec(MyCamera camera, Rectangle rec){
+    CameraStr* c = (CameraStr*)camera;
+
+    float zoomX = (float)GetScreenWidth()  / rec.width;
+    float zoomY = (float)GetScreenHeight() / rec.height;
+
+    c->camera.zoom = fminf(zoomX, zoomY);
+    c->camera.target = (Vector2){ rec.x + rec.width/2.0f, rec.y + rec.height/2.0f };
+    c->scrolls = logf(c->camera.zoom) / logf(c->zoomBaseFactor);
+}
+
 Vector2 cameraGetOffset(MyCamera camera){
     CameraStr* c = (CameraStr*)camera;
 
     return c->camera.offset;
+}
+
+float cameraGetZoom(MyCamera camera){
+    CameraStr* c = (CameraStr*)camera;
+
+    return c->camera.zoom;
 }
 
 void openCamera(MyCamera camera){

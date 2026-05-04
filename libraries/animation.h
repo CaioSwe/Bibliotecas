@@ -18,6 +18,10 @@ typedef void* Animation;
  */
 Animation Animation_Init();
 
+/////////////////////////////////////////////////////////
+// INITS PARA TODOS
+/////////////////////////////////////////////////////////
+
 /**
  * @brief Adiciona um componente de animacao de posicao ao objeto.
  * @param animation O objeto de animacao a ser modificado.
@@ -45,6 +49,10 @@ void Animation_AddScaleAnimation(Animation animation, Rectangle rectangle, inter
  */
 void Animation_AddFramesAnimation(Animation animation, int amountOfFrames, float framesSpeed, float frameDelta);
 
+/////////////////////////////////////////////////////////
+// POSITION
+/////////////////////////////////////////////////////////
+
 /**
  * @brief Define um objetivo de movimento para a animacao de posicao.
  * @param animation O objeto de animacao escolhido.
@@ -68,6 +76,10 @@ void Animation_UpdatePosition(Animation animation, float deltaTime);
  * @return Retorna true se houver um deslocamento ativo, false caso contrario.
  */
 bool Animation_PositionIsAnimating(Animation animation);
+
+/////////////////////////////////////////////////////////
+// RESIZE
+/////////////////////////////////////////////////////////
 
 /**
  * @brief Define um objetivo de redimensionamento para a animacao de escala.
@@ -99,6 +111,10 @@ bool Animation_ScaleIsAnimating(Animation animation);
  * @return Nao ha retorno de algum valor.
  */
 void Animation_EndResize(Animation animation);
+
+/////////////////////////////////////////////////////////
+// FRAMES
+/////////////////////////////////////////////////////////
 
 /**
  * @brief Atualiza o contador de tempo e a troca de quadros (frames) da animacao.
@@ -145,6 +161,10 @@ void Animation_SetFrames(Animation animation, int amountOfFrames, float frameDel
  * @return Retorna o valor em pixels correspondente ao frame atual.
  */
 float Animation_GetFrameCoord(Animation animation);
+
+/////////////////////////////////////////////////////////
+// UPDATE DE TODOS
+/////////////////////////////////////////////////////////
 
 /**
  * @brief Atualiza todos os componentes de animacao inicializados (posicao, escala e frames).
@@ -199,6 +219,10 @@ void Animation_SetPositionFunction(Animation animation, interpolationFunction in
  * @return Nao ha retorno de algum valor.
  */
 void Animation_SetScaleFunction(Animation animation, interpolationFunction interFunc);
+
+/////////////////////////////////////////////////////////
+// FREE's
+/////////////////////////////////////////////////////////
 
 /**
  * @brief Libera a memoria alocada para o objeto de animacao criado.

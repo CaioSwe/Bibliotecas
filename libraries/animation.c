@@ -27,10 +27,6 @@ typedef struct ScaleAnimation{
 
     interpolationFunction interFunc;
 
-    bool maximized;
-    bool resizing;
-    bool minimized;
-
     Rectangle rectangle; // (current size)
 
     float start;
@@ -54,6 +50,7 @@ typedef struct FramesAnimation{
 
 typedef struct AnimationStr{
     int id;
+
     PositionAnimation* position;
     ScaleAnimation* scale;
     FramesAnimation* frames;
@@ -96,10 +93,6 @@ static ScaleAnimation* Animation_ScaleInit(Rectangle rectangle, interpolationFun
     scaleAnim->start = 1.0f;
     scaleAnim->current = 1.0f;
     scaleAnim->end = 1.0f;
-
-    scaleAnim->maximized = false;
-    scaleAnim->resizing = false;
-    scaleAnim->minimized = false;
 
     scaleAnim->rectangle = rectangle;
 
@@ -195,7 +188,6 @@ void Animation_Resize(Animation animation, float scaleTo, float duration){
     ScaleAnimation* animScale = anim->scale;
 
     if(animScale == NULL) return;
-    // if(animScale->resources.animating) return;
 
     animScale->start = 1.0f;
     animScale->end = scaleTo;

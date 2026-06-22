@@ -107,6 +107,15 @@ void concatLista(Lista receive, Lista concatFrom, size_t itemSize);
 void percorrerLista(Lista lista, runThroughItems runFunc, void* extra);
 
 /**
+ * @brief Percorre a lista fornecida na ordem inversa e aplica uma dada função à cada item da lista.
+ * @param lista Lista genérica para percorrer inversamente.
+ * @param runFunc Ponteiro de uma função qualquer que recebe cada um dos itens da lista.
+ * @param extra Ponteiro para um valor/estrutura qualquer usado para auxiliar o processamento da função runFunc.
+ * @return Não há retorno de algum valor.
+ */
+void percorrerListaReverso(Lista lista, runThroughItems runFunc, void* extra);
+
+/**
  * @brief Verifica se um dado elemento está contido na lista fornecida.
  * @param lista Lista genérica para verificação.
  * @param compFunc Ponteiro de uma função de comparação de dois itens.

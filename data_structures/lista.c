@@ -292,6 +292,27 @@ void percorrerLista(Lista lista, runThroughItems runFunc, void* extra) {
     }
 }
 
+void percorrerListaReverso(Lista lista, runThroughItems runFunc, void* extra){
+        if(lista == NULL){
+        printf("\n - percorrerListaReverso() -> Lista passada e' nula.");
+        return;
+    }
+
+    if(runFunc == NULL){
+        printf("\n - percorrerListaReverso() -> Funcao de percursao nula.");
+        return;
+    }
+
+    listaStr* l = (listaStr*)lista;
+
+    Celula* cel = l->fim;
+    
+    while(cel != NULL){
+        runFunc(cel->item, extra);
+        cel = cel->ant;
+    }
+}
+
 bool isInLista(Lista lista, compararItens compFunc, Item item) {
     if(lista == NULL){
         printf("\n - isInLista() -> Lista passada e' nula.");

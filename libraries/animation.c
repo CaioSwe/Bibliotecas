@@ -27,7 +27,8 @@ typedef struct ScaleAnimation{
 
     interpolationFunction interFunc;
 
-    Rectangle rectangle; // (current size)
+    Rectangle originalRec;  // (original size)
+    Rectangle rectangle;    // (current size)
 
     float start;
     float current;
@@ -94,6 +95,7 @@ static ScaleAnimation* Animation_ScaleInit(Rectangle rectangle, interpolationFun
     scaleAnim->current = 1.0f;
     scaleAnim->end = 1.0f;
 
+    scaleAnim->originalRec = rectangle;
     scaleAnim->rectangle = rectangle;
 
     scaleAnim->interFunc = interFunc;
@@ -190,7 +192,11 @@ void Animation_Resize(Animation animation, float scaleTo, float duration){
     if(animScale == NULL) return;
 
     animScale->start = 1.0f;
-    animScale->end = scaleTo;
+
+    float targetWidth = animScale->originalRec.width * scaleTo;
+    float targetScale = targetWidth / animScale->rectangle.width;
+
+    animScale->end = targetScale;
     animScale->current = 1.0f;
 
     animScale->resources.duration = duration;

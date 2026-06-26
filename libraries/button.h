@@ -1,8 +1,8 @@
 #ifndef _Button_h_
-#define _Button_H_
+#define _Button_h_
 
-#include "Utils.h"
-#include "Delimiters.h"
+#include "utils.h"
+#include "delimiters.h"
 
 /**
  * Cabecalho destinado ao gerenciamento de elementos de interface do tipo botao.

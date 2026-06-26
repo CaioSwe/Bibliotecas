@@ -80,7 +80,7 @@ Animation Animation_Init(){
 static PositionAnimation* Animation_PositionInit(interpolationFunction interFunc){
     PositionAnimation* posAnim = (PositionAnimation*)malloc(sizeof(PositionAnimation));
     
-    posAnim->resources = Animation_ResourcesInit(0.0f);
+    posAnim->resources = Animation_ResourcesInit();
     posAnim->start = posAnim->current = posAnim->end = (Vector2){0, 0};
     posAnim->interFunc = interFunc;
 

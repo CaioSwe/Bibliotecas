@@ -19,6 +19,9 @@ typedef struct ImageObjectStr {
     
     float rotation;
     Vector2 origin;
+    
+    bool nPatchOn;
+    NPatchInfo nPatch;
 
     Color color;
 } ImageObjectStr;
@@ -49,6 +52,7 @@ static void Image_ReplaceTexture(ImageObjectStr* imgobj, const char* filename, b
 
 ImageObject Image_Init(const char* filename){
     ImageObjectStr* imgobj = (ImageObjectStr*)malloc(sizeof(ImageObjectStr));
+    if(checkAllocation(imgobj, "[ERROR] Erro ao alocar imagem (objeto).")) return NULL;
 
     static int id = 0;
 
@@ -62,9 +66,18 @@ ImageObject Image_Init(const char* filename){
     imgobj->rotation = 0;
     imgobj->origin = (Vector2){0, 0};
 
+    imgobj->nPatchOn = false;
+
     createAndInsertInstance(&ImgAllInstances, imgobj->id, imgobj);
 
     return (ImageObject)imgobj;
+}
+
+void Image_AddSlicing(ImageObject img, int leftPadding, int topPadding, int rightPadding, int bottomPadding){
+    ImageObjectStr* imgobj = (ImageObjectStr*)img;
+
+    imgobj->nPatchOn = true;
+    imgobj->nPatch = (NPatchInfo){imgobj->source, leftPadding, topPadding, rightPadding, bottomPadding, NPATCH_NINE_PATCH};
 }
 
 void Image_SetPosition(ImageObject img, Vector2 position){
@@ -170,6 +183,8 @@ ImageObject Image_Copy(ImageObject img){
     imgobj2->source = imgobj1->source;
     imgobj2->destination = imgobj1->destination;
 
+    imgobj2->nPatch = imgobj1->nPatch;
+
     imgobj2->rotation = imgobj1->rotation;
     imgobj2->color = imgobj1->color;
 
@@ -179,7 +194,10 @@ ImageObject Image_Copy(ImageObject img){
 void Image_Draw(ImageObject img){
     ImageObjectStr* imgobj = (ImageObjectStr*)img;
 
-    DrawTexturePro(imgobj->image, imgobj->source, imgobj->destination, imgobj->origin, imgobj->rotation, imgobj->color);
+    if(imgobj->nPatchOn)
+        DrawTextureNPatch(imgobj->image, imgobj->nPatch, imgobj->destination, imgobj->origin, imgobj->rotation, imgobj->color);
+    else
+        DrawTexturePro(imgobj->image, imgobj->source, imgobj->destination, imgobj->origin, imgobj->rotation, imgobj->color);
 }
 
 void Image_DrawManually(ImageObject img, Rectangle source, Rectangle destination){
@@ -188,7 +206,13 @@ void Image_DrawManually(ImageObject img, Rectangle source, Rectangle destination
     DrawTexturePro(imgobj->image, source, destination, imgobj->origin, imgobj->rotation, imgobj->color);
 }
 
-void Image_FreeInstance(ImageObject img){
+void Image_RemoveSlicing(ImageObject img){
+    ImageObjectStr* imgobj = (ImageObjectStr*)img;
+
+    imgobj->nPatchOn = false;
+}
+
+static void Image_FreeInstance(ImageObject img){
     ImageObjectStr* imgobj = (ImageObjectStr*)img;
 
     if(imgobj->filename) free(imgobj->filename);

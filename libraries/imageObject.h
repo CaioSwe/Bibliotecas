@@ -21,6 +21,20 @@ typedef void* ImageObject;
 ImageObject Image_Init(const char* filename);
 
 /**
+ * @brief Adiciona a propriedade de nine-slicing 'a uma imagem.
+ * 
+ * NOTA: Slicing usa a propriedade 'source', use setSource primeiro se nao deseja usar a imagem completa como slicing.
+ * 
+ * @param img O objeto de imagem a ser adicionada a propriedade.
+ * @param leftPadding Borda esquerda.
+ * @param topPadding Borda acima.
+ * @param rightPadding Borda direita.
+ * @param bottomPadding Borda abaixo.
+ * @return Nao ha' retorno de algum valor.
+ */
+void Image_AddSlicing(ImageObject img, int leftPadding, int topPadding, int rightPadding, int bottomPadding);
+
+/**
  * @brief Define a posicao do objeto de imagem no espaco 2D.
  * @param img O objeto de imagem a ser modificado.
  * @param position Coordenadas X e Y para o posicionamento.
@@ -165,6 +179,13 @@ void Image_Draw(ImageObject img);
  * @return Nao ha' retorno de algum valor.
  */
 void Image_DrawManually(ImageObject img, Rectangle source, Rectangle destination);
+
+/**
+ * @brief Remove a propriedade de nine-slicing do objeto de imagem.
+ * @param img O objeto de image a ser removida a propriedade.
+ * @return Nao ha' retorno de algum valor.
+ */
+void Image_RemoveSlicing(ImageObject img);
 
 /**
  * @brief Libera a memoria alocada para o objeto de imagem.

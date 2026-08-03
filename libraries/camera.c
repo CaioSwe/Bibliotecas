@@ -35,7 +35,7 @@ MyCamera cameraInit(Vector2 position, Vector2 offset, float zoomBaseFactor){
 
     c->camera = camera;
     c->zoomBaseFactor = zoomBaseFactor;
-    c->scrolls = 0;
+    c->scrolls = 0.0f;
 
     createAndInsertInstance(&cameraAllInstances, c->id, c);
 
@@ -72,7 +72,7 @@ Vector2 getCameraPointDelta(MyCamera camera, Vector2 delta){
 void cameraZoom(MyCamera camera, float factor){
     CameraStr* c = (CameraStr*)camera;
 
-    c->scrolls = Clamp(c->scrolls + factor, logf(0.1f) / logf(c->zoomBaseFactor), logf(8.0f) / logf(c->zoomBaseFactor));
+    c->scrolls = Clamp(c->scrolls + factor, logf(8.0f) / logf(c->zoomBaseFactor), logf(0.1f) / logf(c->zoomBaseFactor));
     c->camera.zoom = powf(c->zoomBaseFactor, c->scrolls);
 }
 

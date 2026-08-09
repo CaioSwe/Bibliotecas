@@ -25,6 +25,6 @@ A instalação do **GCC** pode ser feita [aqui](https://sourceforge.net/projects
 
 Seguindo os passos especificados no tópico anterior, a estrutura final de pastas deve ser conforme apresentada na imagem a seguir.
 
-![Imagem de exemplo da estrutura final do projeto com a biblioteca.](/assets/exemplo-estrutura.png)
+![Imagem de exemplo da estrutura final do projeto com a biblioteca.](/assets/exemplo-estrutura.PNG)
 
 Após a organização da estrutura, é possível utilizar as funções presentes com a inclusão padrão da linguagem (por exemplo, ``` #include <animation.h> ```).

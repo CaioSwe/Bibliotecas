@@ -5,7 +5,7 @@
 
 double lastUpdate = 0;
 
-bool Wait(double intervalo){
+bool wait(double intervalo){
     double agora = GetTime();
 
     if(agora - lastUpdate >= intervalo){

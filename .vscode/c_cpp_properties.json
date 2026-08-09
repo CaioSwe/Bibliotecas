@@ -4,7 +4,10 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
-                "C:/raylib/raylib/src"
+                "C:/raylib/raylib/src/**",
+                "C:/MinGW/include/**"
+                //"../Bibliotecas/data_structures",
+                //"../Bibliotecas/libraries"
             ],
             "defines": [
                 "_DEBUG",

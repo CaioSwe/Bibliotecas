@@ -38,13 +38,22 @@ bool wait(double intervalo);
 int normalize(float value);
 
 /**
- * @brief Realiza uma interpolacao linear entre dois pontos.
- * @param a O valor inicial.
- * @param b O valor final.
- * @param t O fator de interpolação (0 <= t <= 1).
- * @return Retorna o valor resultante da interpolacao.
+ * @brief Retorna um valor dentro do intervalo especificado conforme value.
+ * @param value Valor a ser restringido.
+ * @param minBound Limite inferior.
+ * @param maxBound Limite Superior.
+ * @return Retorna o valor dentro do intervalo especificado.
  */
-float lerp(float a, float b, float t);
+int clamp(int value, int minBound, int maxBound);
+
+/**
+ * @brief Retorna um valor de ponto flutuante dentro do intervalo especificado conforme value.
+ * @param value Valor a ser restringido.
+ * @param minBound Limite inferior.
+ * @param maxBound Limite Superior.
+ * @return Retorna o valor de ponto flutuante dentro do intervalo especificado.
+ */
+float fclamp(float value, float minBound, float maxBound);
 
 /**
  * @brief Desenha uma seta na tela entre dois pontos.

@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <raymath.h>
 
 #include <hash.h>
 Hash animationAllInstances = NULL;
@@ -170,8 +171,8 @@ void Animation_UpdatePosition(Animation animation, float deltaTime){
     
     float eased = animPos->interFunc(progress);
 
-    current.x = lerp(animPos->start.x, animPos->end.x, eased);
-    current.y = lerp(animPos->start.y, animPos->end.y, eased);
+    current.x = Lerp(animPos->start.x, animPos->end.x, eased);
+    current.y = Lerp(animPos->start.y, animPos->end.y, eased);
 
     animPos->current = current;
 }
@@ -225,7 +226,7 @@ void Animation_UpdateScale(Animation animation, float deltaTime){
     float eased = animScale->interFunc(progress);
 
     float prevScale = animScale->current;
-    float newScale = lerp(animScale->start, animScale->end, eased);
+    float newScale = Lerp(animScale->start, animScale->end, eased);
     
     animScale->current = newScale;
 

@@ -25,8 +25,12 @@ int getSign(float value){
     return -1;
 }
 
-float lerp(float a, float b, float t) {
-    return a + (b - a) * t;
+int clamp(int value, int minBound, int maxBound){
+    return (value < minBound) ? minBound : (value > maxBound) ? maxBound : value;
+}
+
+float fclamp(float value, float minBound, float maxBound){
+    return (value < minBound) ? minBound : (value > maxBound) ? maxBound : value;
 }
 
 void DrawArrow(Vector2 start, Vector2 end, float headLength, float headWidth, float backOffset, Color color){

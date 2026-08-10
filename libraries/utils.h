@@ -121,6 +121,8 @@ float easeInOutQuint(float t);
 
 float easeInOutCirc(float t);
 
+float easeInOutBack(float t);
+
 float easeOutBounce(float t);
 
 float easeOutBack(float t);

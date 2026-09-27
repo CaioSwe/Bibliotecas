@@ -78,6 +78,14 @@ void Text_SetPosition(TextObject txtObj, Vector2 position);
 void Text_SetColor(TextObject txtObj, Color color);
 
 /**
+ * @brief Define o espacamento do texto (apenas tem efeito sob Font).
+ * @param txtObj O objeto de texto a ser modificado.
+ * @param spacing O espacamento desejado.
+ * @return Nao ha' retorno de algum valor.
+ */
+void Text_SetSpacing(TextObject txtObj, float spacing);
+
+/**
  * @brief Verifica se um ponto especifico esta' sobre a a'rea do texto.
  * @param txtObj O objeto de texto para verificacao.
  * @param point O ponto (Vector2) a ser testado (ex: posicao do mouse).
@@ -94,11 +102,42 @@ bool Text_IsPointOverText(TextObject txtObj, Vector2 point);
 void Text_MoveDelta(TextObject txtObj, Vector2 delta);
 
 /**
+ * @brief Associa uma fonte (em bitmaps, ex: .png, .bmp, etc...).
+ * @param txtObj O objeto de texto a ser associado.
+ * @param font Ponteiro para a fonte carregada.
+ * @return Nao ha' retorno de algum valor.
+ */
+void Text_AssignBitmapFont(TextObject txtObj, Font* font);
+
+/**
+ * @brief Associa uma fonte (em TrueType, ex: .ttf, .otf).
+ * @param txtObj O objeto de texto a ser associado.
+ * @param font Ponteiro para a fonte carregada.
+ * @return Nao ha' retorno de algum valor.
+ */
+void Text_AssignTrueTypeFont(TextObject txtObj, Font* font);
+
+/**
  * @brief Renderiza o objeto de texto na tela.
+ * 
+ * NOTA: Text_Draw da' prioridade para fontes na seguinte ordem: TrueType > Bitmap > Padrão.
+ * 
  * @param txtObj O objeto de texto a ser desenhado.
  * @return Nao ha' retorno de algum valor.
  */
 void Text_Draw(TextObject txtObj);
+
+/**
+ * @brief Renderiza o objeto de texto na tela ...
+ * 
+ * NOTA: Text_DrawAnimated da' prioridade para fontes na seguinte ordem: TrueType > Bitmap > Padrão.
+ * 
+ * @param txtObj O objeto de texto a ser desenhado.
+ * @param time O tempo decorrido do programa (elapsed).
+ * @param mousePos Posicao atual do mouse na tela.
+ * @return Nao ha' retorno de algum valor.
+ */
+void Text_DrawAnimated(TextObject txtObj, float time, Vector2 mousePos);
 
 /**
  * @brief Obtém o identificador u'nico do objeto de texto.

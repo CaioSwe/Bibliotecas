@@ -19,6 +19,11 @@ typedef struct TextObjectStr{
     Rectangle boundingBox;
     float padding;
     Color color;
+
+    Font* fontBitmap;
+    Font* fontTrueType;
+
+    float spacing;
 } TextObjectStr;
 
 TextObject Text_Init(const char* text){
@@ -37,6 +42,11 @@ TextObject Text_Init(const char* text){
     txt->position.x = txt->position.y = 0;
     txt->boundingBox = (Rectangle){txt->position.x, txt->position.y, MeasureText(txt->text, txt->fontsize), txt->fontsize};
     txt->padding = 0.0f;
+
+    txt->fontBitmap = NULL;
+    txt->fontTrueType = NULL;
+    
+    txt->spacing = 0.0f;
 
     createAndInsertInstance(&TxtAllInstances, txt->id, txt);
 
@@ -102,6 +112,11 @@ void Text_SetColor(TextObject txtObj, Color color){
     txt->color = color;
 }
 
+void Text_SetSpacing(TextObject txtObj, float spacing){
+    TextObjectStr* txt = (TextObjectStr*)txtObj;
+    txt->spacing = spacing;
+}
+
 bool Text_IsPointOverText(TextObject txtObj, Vector2 point){
     TextObjectStr* txt = (TextObjectStr*)txtObj;
     return CheckCollisionPointRec(point, txt->boundingBox);
@@ -116,9 +131,53 @@ void Text_MoveDelta(TextObject txtObj, Vector2 delta){
     txt->position.y = txt->boundingBox.y + txt->padding;
 }
 
+void Text_AssignBitmapFont(TextObject txtObj, Font* font){
+    TextObjectStr* txt = (TextObjectStr*)txtObj;
+    txt->fontBitmap = font;
+}
+
+void Text_AssignTrueTypeFont(TextObject txtObj, Font* font){
+    TextObjectStr* txt = (TextObjectStr*)txtObj;
+    txt->fontTrueType = font;
+}
+
 void Text_Draw(TextObject txtObj){
     TextObjectStr* txt = (TextObjectStr*)txtObj;
-    DrawText(txt->text, txt->position.x, txt->position.y, txt->fontsize, txt->color);
+
+    Font font = txt->fontTrueType ? *txt->fontTrueType : (txt->fontBitmap ? *txt->fontBitmap : GetFontDefault());
+    DrawTextEx(font, txt->text, txt->position, txt->fontsize, txt->spacing, txt->color);
+}
+
+void Text_DrawAnimated(TextObject txtObj, float time, Vector2 mousePos) {
+    TextObjectStr* txt = (TextObjectStr*)txtObj;
+
+    Font font = txt->fontTrueType ? *txt->fontTrueType : (txt->fontBitmap ? *txt->fontBitmap : GetFontDefault());
+
+    int codepointCount = 0;
+    int* codepoints = LoadCodepoints(txt->text, &codepointCount);
+
+    float xOffset = 0.0f;
+    float scaleFactor = (float)txt->fontsize / font.baseSize;
+
+    float mouseXpos = mousePos.x;
+
+    for(int i = 0; i < codepointCount; i++){
+        int index = GetGlyphIndex(font, codepoints[i]);
+
+        float gx = 1 * expf(-powf((txt->position.x + xOffset) - mouseXpos, 2.0f) / (2 * powf(100.0f, 2.0f)));
+
+        float offsetY = (sinf(time * 18.0f + i * 1.3f) * 3.0f) + (cosf(time * 43.0f + i * 2.7f) * 2.0f);
+        float offsetX = (cosf(time * 18.0f + i * 1.3f) * 3.0f) + (sinf(time * 43.0f + i * 2.7f) * 2.0f);
+
+        Vector2 charPos = { txt->position.x + xOffset + offsetX * gx, txt->position.y + offsetY * gx };
+
+        DrawTextCodepoint(font, codepoints[i], charPos, (float)txt->fontsize, txt->color);
+
+        if(font.glyphs[index].advanceX == 0) xOffset += (font.recs[index].width + txt->spacing) * scaleFactor;
+        else xOffset += (font.glyphs[index].advanceX + txt->spacing) * scaleFactor;
+    }
+
+    UnloadCodepoints(codepoints);
 }
 
 int Text_getId(TextObject txtObj){
@@ -153,6 +212,7 @@ float Text_getPadding(TextObject txtObj){
 
 static void Text_FreeInstance(TextObject txtObj){
     TextObjectStr* txt = (TextObjectStr*)txtObj;
+    
     free(txt);
 }
 

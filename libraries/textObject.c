@@ -6,9 +6,20 @@
 #include <string.h>
 
 #include <hash.h>
+
 #include "utils.h"
 
 Hash TxtAllInstances = NULL;
+
+typedef struct TextAnimationResourcesStr{
+    Animation* animation;
+    float letterDelta;
+} TextAnimationResourcesStr;
+
+typedef struct TextAnimationStr{
+    TextAnimationResourcesStr* x;
+    TextAnimationResourcesStr* y;
+} TextAnimationStr;
 
 typedef struct TextObjectStr{
     int id;
@@ -24,6 +35,8 @@ typedef struct TextObjectStr{
     Font* fontTrueType;
 
     float spacing;
+
+    TextAnimationStr* txtAnim;
 } TextObjectStr;
 
 TextObject Text_Init(const char* text){
@@ -47,6 +60,8 @@ TextObject Text_Init(const char* text){
     txt->fontTrueType = NULL;
     
     txt->spacing = 0.0f;
+
+    txt->txtAnim = NULL;
 
     createAndInsertInstance(&TxtAllInstances, txt->id, txt);
 
@@ -105,6 +120,11 @@ void Text_SetPosition(TextObject txtObj, Vector2 position){
 
     txt->position.x = txt->boundingBox.x + txt->padding;
     txt->position.y = txt->boundingBox.y + txt->padding;
+
+    if(txt->txtAnim){
+        Animation_SetPosition(txt->txtAnim->x->animation, txt->position);
+        Animation_SetPosition(txt->txtAnim->y->animation, txt->position);
+    }
 }
 
 void Text_SetColor(TextObject txtObj, Color color){
@@ -129,6 +149,11 @@ void Text_MoveDelta(TextObject txtObj, Vector2 delta){
     
     txt->position.x = txt->boundingBox.x + txt->padding;
     txt->position.y = txt->boundingBox.y + txt->padding;
+
+    if(txt->txtAnim){
+        Animation_SetPosition(txt->txtAnim->x->animation, txt->position);
+        Animation_SetPosition(txt->txtAnim->y->animation, txt->position);
+    }
 }
 
 void Text_AssignBitmapFont(TextObject txtObj, Font* font){
@@ -141,42 +166,79 @@ void Text_AssignTrueTypeFont(TextObject txtObj, Font* font){
     txt->fontTrueType = font;
 }
 
+static TextAnimationResourcesStr* Text_InitAnimationResources(TextObjectStr* txt, interpolationFunction interFunc, float letterDelta){
+    TextAnimationResourcesStr* tar = (TextAnimationResourcesStr*)malloc(sizeof(TextAnimationResourcesStr));
+
+    tar->animation = Animation_Init();
+    Animation_AddPositionAnimation(tar->animation, interFunc);
+    Animation_SetPosition(tar->animation, txt->position);
+
+    
+    tar->letterDelta = letterDelta;
+    
+    return tar;
+}
+
+void Text_AddAnimation(TextObject txtObj, interpolationFunction interFuncX, float letterDeltaX, interpolationFunction interFuncY, float letterDeltaY){
+    TextObjectStr* txt = (TextObjectStr*)txtObj;
+    
+    txt->txtAnim = (TextAnimationStr*)malloc(sizeof(TextAnimationStr));
+    
+    txt->txtAnim->x = Text_InitAnimationResources(txt, interFuncX, letterDeltaX);
+    txt->txtAnim->y = Text_InitAnimationResources(txt, interFuncY, letterDeltaY);
+}
+
 void Text_Draw(TextObject txtObj){
     TextObjectStr* txt = (TextObjectStr*)txtObj;
-
+    
     Font font = txt->fontTrueType ? *txt->fontTrueType : (txt->fontBitmap ? *txt->fontBitmap : GetFontDefault());
     DrawTextEx(font, txt->text, txt->position, txt->fontsize, txt->spacing, txt->color);
 }
 
-void Text_DrawAnimated(TextObject txtObj, float time, Vector2 mousePos) {
+static void Text_UpdateAnimation(TextObjectStr* txt, TextAnimationResourcesStr* txtRes){
+    if(Animation_PositionIsAnimating(txtRes->animation) == false) Animation_MoveTo(txtRes->animation, txt->position, 0.75f);
+}
+
+void Text_DrawAnimated(TextObject txtObj, float deltaTime){
     TextObjectStr* txt = (TextObjectStr*)txtObj;
-
+    
     Font font = txt->fontTrueType ? *txt->fontTrueType : (txt->fontBitmap ? *txt->fontBitmap : GetFontDefault());
-
+    
     int codepointCount = 0;
     int* codepoints = LoadCodepoints(txt->text, &codepointCount);
-
+    
     float xOffset = 0.0f;
     float scaleFactor = (float)txt->fontsize / font.baseSize;
+    
+    TextAnimationResourcesStr* xFuncs = txt->txtAnim->x;
+    TextAnimationResourcesStr* yFuncs = txt->txtAnim->y;
+    
+    Text_UpdateAnimation(txt, xFuncs);
+    Text_UpdateAnimation(txt, yFuncs);
 
-    float mouseXpos = mousePos.x;
-
+    Animation_UpdatePosition(xFuncs->animation, deltaTime);
+    Animation_UpdatePosition(yFuncs->animation, deltaTime);
+    
+    float xProgress = Animation_GetPositionProgress(xFuncs->animation);
+    float yProgress = Animation_GetPositionProgress(yFuncs->animation);
+    
+    interpolationFunction xInterFunc = Animation_GetPositionFunction(xFuncs->animation);
+    interpolationFunction yInterFunc = Animation_GetPositionFunction(yFuncs->animation);
+    
     for(int i = 0; i < codepointCount; i++){
         int index = GetGlyphIndex(font, codepoints[i]);
+        
+        float offsetX = xInterFunc((xProgress + (i * xFuncs->letterDelta)) % 1.0f);
+        float offsetY = yInterFunc((yProgress + (i * yFuncs->letterDelta)) % 1.0f);
 
-        float gx = 1 * expf(-powf((txt->position.x + xOffset) - mouseXpos, 2.0f) / (2 * powf(100.0f, 2.0f)));
-
-        float offsetY = (sinf(time * 18.0f + i * 1.3f) * 3.0f) + (cosf(time * 43.0f + i * 2.7f) * 2.0f);
-        float offsetX = (cosf(time * 18.0f + i * 1.3f) * 3.0f) + (sinf(time * 43.0f + i * 2.7f) * 2.0f);
-
-        Vector2 charPos = { txt->position.x + xOffset + offsetX * gx, txt->position.y + offsetY * gx };
-
+        Vector2 charPos = { txt->position.x + xOffset + offsetX, txt->position.y + offsetY};
+        
         DrawTextCodepoint(font, codepoints[i], charPos, (float)txt->fontsize, txt->color);
-
+        
         if(font.glyphs[index].advanceX == 0) xOffset += (font.recs[index].width + txt->spacing) * scaleFactor;
         else xOffset += (font.glyphs[index].advanceX + txt->spacing) * scaleFactor;
     }
-
+    
     UnloadCodepoints(codepoints);
 }
 

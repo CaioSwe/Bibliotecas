@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <raylib.h>
 
+#include <animation.h>
 #include <delimiters.h>
 
 /**
@@ -118,6 +119,19 @@ void Text_AssignBitmapFont(TextObject txtObj, Font* font);
 void Text_AssignTrueTypeFont(TextObject txtObj, Font* font);
 
 /**
+ * @brief Associa uma animacao (via Animation.h).
+ * @param txtObj O objeto de texto a ser associado.
+
+ * @param interFuncX Funcao de interpolacao para X.
+ * @param letterDeltaX O deslocamento relativo para cada letra X.
+
+ * @param interFuncY Funcao de interpolacao para Y.
+ * @param letterDeltaY O deslocamento relativo para cada letra Y.
+ * @return Nao ha' retorno de algum valor.
+ */
+void Text_AddAnimation(TextObject txtObj, interpolationFunction interFuncX, float letterDeltaX, interpolationFunction interFuncY, float letterDeltaY);
+
+/**
  * @brief Renderiza o objeto de texto na tela.
  * 
  * NOTA: Text_Draw da' prioridade para fontes na seguinte ordem: TrueType > Bitmap > Padrão.
@@ -133,11 +147,10 @@ void Text_Draw(TextObject txtObj);
  * NOTA: Text_DrawAnimated da' prioridade para fontes na seguinte ordem: TrueType > Bitmap > Padrão.
  * 
  * @param txtObj O objeto de texto a ser desenhado.
- * @param time O tempo decorrido do programa (elapsed).
- * @param mousePos Posicao atual do mouse na tela.
+ * @param deltaTime O tempo desde o ultimo frame (deltaTime).
  * @return Nao ha' retorno de algum valor.
  */
-void Text_DrawAnimated(TextObject txtObj, float time, Vector2 mousePos);
+void Text_DrawAnimated(TextObject txtObj, float deltaTime);
 
 /**
  * @brief Obtém o identificador u'nico do objeto de texto.

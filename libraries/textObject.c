@@ -228,8 +228,8 @@ void Text_DrawAnimated(TextObject txtObj, float deltaTime){
     for(int i = 0; i < codepointCount; i++){
         int index = GetGlyphIndex(font, codepoints[i]);
         
-        float offsetX = xInterFunc((xProgress + (i * xFuncs->letterDelta)) % 1.0f);
-        float offsetY = yInterFunc((yProgress + (i * yFuncs->letterDelta)) % 1.0f);
+        float offsetX = xInterFunc((xProgress + (i * xFuncs->letterDelta)));
+        float offsetY = yInterFunc((yProgress + (i * yFuncs->letterDelta)));
 
         Vector2 charPos = { txt->position.x + xOffset + offsetX, txt->position.y + offsetY};
         

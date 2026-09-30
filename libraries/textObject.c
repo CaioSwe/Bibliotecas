@@ -199,6 +199,8 @@ static void Text_UpdateAnimation(TextObjectStr* txt, TextAnimationResourcesStr* 
     if(Animation_PositionIsAnimating(txtRes->animation) == false) Animation_MoveTo(txtRes->animation, txt->position, 0.75f);
 }
 
+// Teste de submodulo
+
 void Text_DrawAnimated(TextObject txtObj, float deltaTime){
     TextObjectStr* txt = (TextObjectStr*)txtObj;
     

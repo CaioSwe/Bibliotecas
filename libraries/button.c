@@ -72,7 +72,7 @@ void Button_FitSizeToTextsize(Button button){
     
     Font font = (btn->fontTrueType ? *btn->fontTrueType : GetFontDefault());
 
-    btn->width = MeasureTextEx(font, btn->text, btn->fontsize, btn->spacing) * 1.1f;
+    btn->width = MeasureTextEx(font, btn->text, btn->fontsize, btn->spacing).x * 1.1f;
     btn->height = btn->fontsize * 1.1f;
 
     btn->borda = btn->height * 0.1f;
@@ -137,7 +137,7 @@ void Button_Draw(Button button){
     Vector2 mousePos = GetMousePosition();
     
     Font font = (btn->fontTrueType ? *btn->fontTrueType : GetFontDefault());
-    Vector2 position = {btn->position.x + btn->width / 2 - MeasureTextEx(font, btn->text, btn->fontsize, btn->spacing) / 2, btn->position.y + btn->height / 2 - btn->fontsize / 2};
+    Vector2 position = {btn->position.x + btn->width / 2 - MeasureTextEx(font, btn->text, btn->fontsize, btn->spacing).x / 2, btn->position.y + btn->height / 2 - btn->fontsize / 2};
 
     if(!Button_isHovering(button, mousePos)){
         DrawRectangleLinesEx(rect, btn->borda, btn->border);

@@ -172,7 +172,6 @@ static TextAnimationResourcesStr* Text_InitAnimationResources(TextObjectStr* txt
     tar->animation = Animation_Init();
     Animation_AddPositionAnimation(tar->animation, interFunc);
     Animation_SetPosition(tar->animation, txt->position);
-
     
     tar->letterDelta = letterDelta;
     

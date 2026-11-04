@@ -86,6 +86,14 @@ bool Button_isHovering(Button button, Vector2 point);
 bool Button_isPressedByMouse(Button button);
 
 /**
+ * @brief Associa uma fonte (em TrueType, ex: .ttf, .otf).
+ * @param button O objeto de botao a ser associado.
+ * @param font Ponteiro para a fonte carregada.
+ * @return Nao ha' retorno de algum valor.
+ */
+void Button_AssignTrueTypeFont(Button button, Font* font);
+
+/**
  * @brief Realiza o desenho do botao e de seu texto no buffer de tela atual.
  * @param button O objeto botao a ser renderizado.
  * @return Nao ha retorno.

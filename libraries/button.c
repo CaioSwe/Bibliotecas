@@ -11,7 +11,9 @@ typedef struct ButtonStr{
     float width, height;
     
     char text[MAX_STRSIZE];
-    
+    Font* fontTrueType;
+    float spacing;
+
     int fontsize;
     int borda;
 
@@ -35,6 +37,9 @@ Button Button_Init(const char* text, int fontsize, Vector2 position, Color textF
 
     btn->width = 0.0f;
     btn->height = 0.0f;
+
+    btn->fontTrueType = NULL;
+    btn->spacing = 0.0f;
 
     btn->fontsize = fontsize;
     btn->borda = 3;
@@ -113,18 +118,33 @@ bool Button_isPressedByMouse(Button button){
     return hoveringButton && IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
 }
 
+void Button_AssignTrueTypeFont(Button button, Font* font){
+    ButtonStr* btn = (ButtonStr*)button;
+    btn->fontTrueType = font;
+}
+
+void Button_SetSpacing(Button button, float spacing){
+    ButtonStr* btn = (ButtonStr*)button;
+    btn->spacing = spacing;
+}
+
 void Button_Draw(Button button){
     ButtonStr* btn = (ButtonStr*)button;
 
     Rectangle rect = { btn->position.x, btn->position.y, btn->width, btn->height };
     Vector2 mousePos = GetMousePosition();
 
+    Vector2 position = {btn->position.x + btn->width / 2 - MeasureText(btn->text, btn->fontsize) / 2, btn->position.y + btn->height / 2 - btn->fontsize / 2};
+
+    Font font = (btn->fontTrueType ? *btn->fontTrueType : GetFontDefault());
+
     if(!Button_isHovering(button, mousePos)){
         DrawRectangleLinesEx(rect, btn->borda, btn->border);
-        DrawText(btn->text, btn->position.x + btn->width / 2 - MeasureText(btn->text, btn->fontsize) / 2, btn->position.y + btn->height / 2 - btn->fontsize / 2, btn->fontsize, btn->textFill);
-    } else{
+        DrawTextEx(font, btn->text, position, btn->fontsize, btn->spacing, btn->textFill);
+    }
+    else{
         DrawRectangleRec(rect, btn->fillHover);
-        DrawText(btn->text, btn->position.x + btn->width / 2 - MeasureText(btn->text, btn->fontsize) / 2, btn->position.y + btn->height / 2 - btn->fontsize / 2, btn->fontsize, btn->textHover);
+        DrawTextEx(font, btn->text, position, btn->fontsize, btn->spacing, btn->textHover);
     }
 }
 

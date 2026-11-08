@@ -132,6 +132,8 @@ void Button_CentralizeOnPoint(Button button, Vector2 point){
 void Button_AssignTrueTypeFont(Button button, Font* font){
     ButtonStr* btn = (ButtonStr*)button;
     btn->fontTrueType = font;
+
+    btn->height = MeasureTextEx(*font, "A", btn->fontsize, btn->spacing).y;
 }
 
 void Button_SetSpacing(Button button, float spacing){

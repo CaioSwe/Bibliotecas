@@ -2,6 +2,9 @@
 
 #include <stdlib.h>
 #include <string.h>
+
+#include <raymath.h>
+
 #include "utils.h"
 
 typedef struct ButtonStr{
@@ -118,6 +121,12 @@ bool Button_isPressedByMouse(Button button){
     bool hoveringButton = Button_isHovering(button, mousePos);
 
     return hoveringButton && IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
+}
+
+void Button_CentralizeOnPoint(Button button, Vector2 point){
+    ButtonStr* btn = (ButtonStr*)button;
+
+    btn->position = Vector2Subtract(point, (Vector2){btn->width / 2.0f, btn->height / 2.0f});
 }
 
 void Button_AssignTrueTypeFont(Button button, Font* font){

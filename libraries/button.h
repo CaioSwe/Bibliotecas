@@ -86,6 +86,14 @@ bool Button_isHovering(Button button, Vector2 point);
 bool Button_isPressedByMouse(Button button);
 
 /**
+ * @brief Centraliza a posição do botão de acordo com o ponto passado.
+ * @param button O objeto botao a ser posicionado.
+ * @param point Ponto de referência para centralização.
+ * @return Nao ha' retorno de algum valor.
+ */
+void Button_CentralizeOnPoint(Button button, Vector2 point);
+
+/**
  * @brief Associa uma fonte (em TrueType, ex: .ttf, .otf).
  * @param button O objeto de botao a ser associado.
  * @param font Ponteiro para a fonte carregada.

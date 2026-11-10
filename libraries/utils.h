@@ -26,6 +26,12 @@ __declspec(dllimport) HCURSOR __stdcall SetCursor(HCURSOR hCursor);
 #define EULER 2.71828
 
 /**
+ * @brief Funcao que recebe um item e o desenha na tela.
+ * @return Nao ha' retorno de algum valor.
+ */
+typedef void (*drawFunction)(Item item);
+
+/**
  * @brief Aguarda por um determinado período e sinaliza a passagem do intervalo.
  * @param intervalo O tempo em segundos a ser esperado.
  * @return Retorna true se o intervalo foi atingido, false caso contra'rio.

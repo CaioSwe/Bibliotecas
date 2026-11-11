@@ -141,6 +141,8 @@ float sineFunction(float t);
 
 float cosineFuntion(float t);
 
+float spikeFunction(float t);
+
 ///////////////////////////////////////////
 
 /**

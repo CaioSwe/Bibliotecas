@@ -3,6 +3,8 @@
 #include <time.h>
 #include <raymath.h>
 
+#include <math.h>
+
 double lastUpdate = 0;
 
 bool wait(double intervalo){
@@ -208,6 +210,10 @@ float sineFunction(float t){
 
 float cosineFuntion(float t){
     return cosf(t * 2 * PI);
+}
+
+float spikeFunction(float t){
+    return exp(-15 * fabs(t - 0.5f));
 }
 
 void createAndInsertInstance(Hash* hash, int id, Item item){

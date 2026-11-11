@@ -77,6 +77,13 @@ void Animation_UpdatePosition(Animation animation, float deltaTime);
  */
 bool Animation_PositionIsAnimating(Animation animation);
 
+/**
+ * @brief Forca a finalizacao imediata da animacao de posicao, definindo-a para o estado final.
+ * @param animation O objeto de animacao a ser modificado.
+ * @return Nao ha retorno de algum valor.
+ */
+void Animation_EndPositionAnimation(Animation animation);
+
 /////////////////////////////////////////////////////////
 // RESIZE
 /////////////////////////////////////////////////////////

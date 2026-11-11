@@ -186,6 +186,16 @@ bool Animation_PositionIsAnimating(Animation animation){
     return animPos->resources.animating;
 }
 
+void Animation_EndPositionAnimation(Animation animation){
+    AnimationStr* anim = (AnimationStr*)animation;
+    PositionAnimation* animPos = anim->position;
+
+    if(animPos == NULL) return;
+
+    animPos->current = animPos->end;
+    animPos->resources.animating = false;
+}
+
 void Animation_Resize(Animation animation, float scaleTo, float duration){
     AnimationStr* anim = (AnimationStr*)animation;
     ScaleAnimation* animScale = anim->scale;

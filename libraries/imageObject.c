@@ -150,6 +150,11 @@ Vector2 Image_GetPosition(ImageObject img){
     return (Vector2){imgobj->destination.x, imgobj->destination.y};
 }
 
+Rectangle Image_GetSource(ImageObject img){
+    ImageObjectStr* imgobj = (ImageObjectStr*)img;
+    return imgobj->source;
+}
+
 Rectangle Image_GetDestination(ImageObject img){
     ImageObjectStr* imgobj = (ImageObjectStr*)img;
     return imgobj->destination;

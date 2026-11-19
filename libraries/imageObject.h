@@ -123,6 +123,13 @@ void Image_FitToScreenSize(ImageObject img);
 Vector2 Image_GetPosition(ImageObject img);
 
 /**
+ * @brief Obte'm o retangulo de fonte atual do objeto de imagem.
+ * @param img O objeto de imagem escolhido.
+ * @return Retorna o retangulo de fonte da imagem.
+ */
+Rectangle Image_GetSource(ImageObject img);
+
+/**
  * @brief Obte'm o retangulo de destino atual do objeto de imagem.
  * @param img O objeto de imagem escolhido.
  * @return Retorna o retangulo de destino da imagem.
